@@ -761,7 +761,7 @@ export default class CrypticBase {
         const newOffer: INewOffer = offerValuesAssigner(offer);
 
         associationArr.forEach((association) => {
-          // console.log(`offer.get()[${association}]:`, offer.get()[association]);
+          console.log(`offer.get()[${association}]:`, offer.get()[association]);
           newOffer[association] = offer.get()[association].get();
         });
 
@@ -1764,18 +1764,3 @@ export default class CrypticBase {
     return this.chatMessages;
   }
 }
-
-const crypticbase = new CrypticBase(false);
-
-async function test() {
-  const offers = await crypticbase.getOffers(null, [
-    'vendor',
-    'cryptocurrency',
-    'fiat',
-    'payment_method',
-  ]);
-
-  // console.log(offers.length);
-}
-
-test();
