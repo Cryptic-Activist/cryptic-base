@@ -506,9 +506,8 @@ export default class CrypticBase {
   // Fiat methods
   async createFiat(fiatData: ICreateFiat): Promise<IFiatReturn> {
     try {
-      console.log(fiatData);
       const fiat = await Fiat.create(fiatData);
-      console.log('fiat:', fiat);
+
       this.fiat = fiat.get();
     } catch (err) {
       throw Error(err);
@@ -755,13 +754,10 @@ export default class CrypticBase {
         [key: string]: any;
       }
 
-      console.log(offers);
-
       const mapedOffers: IOfferReturn[] = offers.map((offer) => {
         const newOffer: INewOffer = offerValuesAssigner(offer);
 
         associationArr.forEach((association) => {
-          console.log(`offer.get()[${association}]:`, offer.get()[association]);
           newOffer[association] = offer.get()[association].get();
         });
 
@@ -924,8 +920,6 @@ export default class CrypticBase {
       }
 
       const newPaymentMethod: any = paymentMethodValuesAssigner(paymentMethod);
-
-      // console.log(paymentMethod.get().payment_method_category.get());
 
       associationArr.forEach((association) => {
         newPaymentMethod[association] = paymentMethod
