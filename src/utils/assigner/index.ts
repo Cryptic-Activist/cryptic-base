@@ -34,7 +34,7 @@ export function offerValuesAssigner(offer): IOfferReturn {
     trade_pricing_time_limit: offer.get().trade_pricing_time_limit,
     trade_instructions_tags: offer.get().trade_instructions_tags,
     trade_instructions_label: offer.get().trade_instructions_label,
-    trade_instructions_terms: offer.get().trade_instructions_label,
+    trade_instructions_terms: offer.get().trade_instructions_terms,
     trade_instructions_instructions: offer.get()
       .trade_instructions_instructions,
     is_deleted: offer.get().is_deleted,
