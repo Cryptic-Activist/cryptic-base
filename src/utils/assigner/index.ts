@@ -2,6 +2,7 @@ import {
   IUserReturn,
   IOfferReturn,
   ITradeReturn,
+  IFeedbackReturn,
   IPaymentMethodReturn,
   IPaymentMethodCategoryReturn,
 } from '../../interfaces/index';
@@ -81,5 +82,19 @@ export function tradeValuesAssigner(trade): ITradeReturn {
     when_deleted: trade.get().when_deleted,
     created_at: trade.get().createdAt,
     updated_at: trade.get().updatedAt,
+  };
+}
+
+export function feedbackValuesAssigner(feedback): IFeedbackReturn {
+  return {
+    id: feedback.get().id,
+    user_id: feedback.get().user_id,
+    offer_id: feedback.get().offer_id,
+    message: feedback.get().message,
+    type: feedback.get().type,
+    is_deleted: feedback.get().is_deleted,
+    when_deleted: feedback.get().when_deleted,
+    created_at: feedback.get().createdAt,
+    updated_at: feedback.get().updatedAt,
   };
 }

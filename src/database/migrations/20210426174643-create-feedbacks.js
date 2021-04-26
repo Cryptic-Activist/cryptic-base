@@ -2,42 +2,34 @@
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('users', {
+    await queryInterface.createTable('feedbacks', {
       id: {
         type: Sequelize.BIGINT,
         primaryKey: true,
         autoIncrement: true,
         allowNull: false,
       },
-      first_name: {
+      user_id: {
+        type: Sequelize.BIGINT,
+        allowNull: false,
+        references: { model: 'users', key: 'id' },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
+      },
+      offer_id: {
+        type: Sequelize.BIGINT,
+        allowNull: false,
+        references: { model: 'offers', key: 'id' },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
+      },
+      message: {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      last_name: {
-        type: Sequelize.STRING,
+      type: {
+        type: Sequelize.ENUM(['positive', 'negative']),
         allowNull: false,
-      },
-      username: {
-        type: Sequelize.STRING,
-        allowNull: false,
-        unique: true,
-      },
-      password: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
-      private_keys: {
-        type: Sequelize.ARRAY(Sequelize.STRING),
-        allowNull: false,
-      },
-      profile_image: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
-      is_verified: {
-        type: Sequelize.BOOLEAN,
-        allowNull: false,
-        defaultValue: false,
       },
       is_deleted: {
         type: Sequelize.BOOLEAN,
@@ -61,6 +53,6 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('users');
+    await queryInterface.dropTable('feedbacks');
   },
 };

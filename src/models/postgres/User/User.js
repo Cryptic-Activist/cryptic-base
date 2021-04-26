@@ -28,6 +28,10 @@ class User extends Model {
           type: DataTypes.ARRAY(DataTypes.STRING),
           allowNull: false,
         },
+        profile_image: {
+          type: DataTypes.STRING,
+          allowNull: false,
+        },
         is_verified: {
           type: DataTypes.BOOLEAN,
           allowNull: false,
@@ -59,6 +63,7 @@ class User extends Model {
 
     this.hasMany(models.Offer, { foreignKey: 'vendor_id', as: 'offers' });
     this.hasMany(models.Trade, { foreignKey: 'vendor_id', as: 'trades' });
+    this.hasMany(models.Feedback, { foreignKey: 'user_id', as: 'feedbacks' });
   }
 }
 

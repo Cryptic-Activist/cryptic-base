@@ -94,6 +94,11 @@ class Offer extends Model {
       foreignKey: 'payment_method_id',
       as: 'payment_method',
     });
+
+    this.hasMany(models.Feedback, {
+      foreignKey: 'offer_id',
+      as: 'feedbacks',
+    });
   }
 }
 

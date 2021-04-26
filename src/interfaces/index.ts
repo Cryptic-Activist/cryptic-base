@@ -204,6 +204,62 @@ export interface IGetFiat {
   updated_at?: Date;
 }
 
+// Feedback
+export interface ICreateFeedback {
+  user_id: BigInt;
+  offer_id: BigInt;
+  message: string;
+  type: 'positive' | 'negative';
+}
+
+export interface IFeedbackReturn {
+  id: BigInt;
+  user_id: BigInt;
+  offer_id: BigInt;
+  message: string;
+  type: 'positive' | 'negative';
+  is_deleted: boolean;
+  when_deleted: null | Date;
+  created_at: Date;
+  updated_at: Date;
+}
+
+export interface IUpdateFeedback {
+  id?: BigInt;
+  user_id?: BigInt;
+  offer_id?: BigInt;
+  message?: string;
+  type?: 'positive' | 'negative';
+  is_deleted?: boolean;
+  when_deleted?: null | Date;
+  created_at?: Date;
+  updated_at?: Date;
+}
+
+export interface IDeleteFeedback {
+  id?: BigInt;
+  user_id?: BigInt;
+  offer_id?: BigInt;
+  message?: string;
+  type?: 'positive' | 'negative';
+  is_deleted?: boolean;
+  when_deleted?: null | Date;
+  created_at?: Date;
+  updated_at?: Date;
+}
+
+export interface IGetFeedback {
+  id?: BigInt;
+  user_id?: BigInt;
+  offer_id?: BigInt;
+  message?: string;
+  type?: 'positive' | 'negative';
+  is_deleted?: boolean;
+  when_deleted?: null | Date;
+  created_at?: Date;
+  updated_at?: Date;
+}
+
 // Offer
 export interface ICreateOffer {
   vendor_id: BigInt;

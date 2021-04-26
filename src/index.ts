@@ -12,6 +12,7 @@ import {
   tradeValuesAssigner,
   paymentMethodValuesAssigner,
   paymentMethodCategoryValuesAssigner,
+  feedbackValuesAssigner,
 } from './utils/assigner/index';
 import { associationsToArray } from './utils/association/index';
 
@@ -22,6 +23,7 @@ import PaymentMethodCategory from './models/postgres/PaymentMethodCategory/Payme
 import Offer from './models/postgres/Offer/Offer';
 import Cryptocurrency from './models/postgres/Cryptocurrency/Cryptocurrency';
 import Fiat from './models/postgres/Fiat/Fiat';
+import Feedback from './models/postgres/Feedback/Feedback';
 import Trade from './models/postgres/Trade/Trade';
 import Chat from './models/postgres/Chat/Chat';
 
@@ -45,6 +47,11 @@ import {
   IUpdateFiat,
   IDeleteFiat,
   IGetFiat,
+  ICreateFeedback,
+  IFeedbackReturn,
+  IUpdateFeedback,
+  IDeleteFeedback,
+  IGetFeedback,
   ICreateOffer,
   IOfferReturn,
   IUpdateOffer,
@@ -95,6 +102,11 @@ export default class CrypticBase {
   private updatedFiats: object;
   private deletedFiats: number;
   private fiats: IFiatReturn[];
+
+  private feedback: IFeedbackReturn;
+  private updatedFeedbacks: object;
+  private deletedFeedbacks: number;
+  private feedbacks: IFeedbackReturn[];
 
   private offer: IOfferReturn;
   private updatedOffer: object;
@@ -620,6 +632,132 @@ export default class CrypticBase {
       throw Error(err);
     }
     return this.fiats;
+  }
+
+  // Feedback methods
+  async createFeedback(fiatData: ICreateFeedback): Promise<IFeedbackReturn> {
+    try {
+      const feedback = await Feedback.create(fiatData);
+
+      this.feedback = feedback.get();
+    } catch (err) {
+      throw Error(err);
+    }
+    return this.feedback;
+  }
+
+  async updateFeedback(
+    where: WhereOptions<IUpdateFeedback>,
+    feedbackDataToUpdate: IUpdateFeedback,
+  ): Promise<object> {
+    try {
+      const updatedFeedback = await Fiat.update(feedbackDataToUpdate, {
+        where,
+      });
+      this.updatedFeedbacks = updatedFeedback;
+    } catch (err) {
+      throw Error(err);
+    }
+    return this.updatedFeedbacks;
+  }
+
+  async deleteFeedback(where: WhereOptions<IDeleteFeedback>): Promise<number> {
+    try {
+      const deletedFeedback = await Feedback.destroy({ where });
+      this.deletedFeedbacks = deletedFeedback;
+    } catch (err) {
+      throw Error(err);
+    }
+    return this.deletedFeedbacks;
+  }
+
+  async getFeedback(
+    where: WhereOptions<IGetFeedback>,
+    associationArr: [] | ['user'] | ['offer'] | ['user', 'offer'],
+  ): Promise<IFeedbackReturn> {
+    try {
+      let feedback: any;
+
+      const joinObjArr = associationsToArray(associationArr);
+
+      feedback = await Offer.findOne({
+        where,
+        include: joinObjArr,
+      });
+
+      if (!feedback) {
+        this.feedback = null;
+        return this.feedback;
+      }
+
+      const newFeedback: any = feedbackValuesAssigner(feedback);
+
+      associationArr.forEach((association) => {
+        newFeedback[association] = feedback.get()[association].get();
+      });
+
+      this.feedback = newFeedback;
+    } catch (err) {
+      throw Error(err);
+    }
+    return this.feedback;
+  }
+
+  async getFeedbacks(
+    limit: null | number,
+    associationArr: [] | ['user'] | ['offer'] | ['user', 'offer'],
+    where?: WhereOptions<IGetOffer>,
+  ): Promise<IFeedbackReturn[]> {
+    try {
+      let feedbacks: any;
+
+      const joinObjArr = associationsToArray(associationArr);
+
+      if (limit) {
+        if (where) {
+          feedbacks = await Feedback.findAll({
+            where,
+            include: joinObjArr,
+            limit,
+          });
+        } else {
+          feedbacks = await Feedback.findAll({
+            include: joinObjArr,
+            limit,
+          });
+        }
+      } else {
+        if (where) {
+          feedbacks = await Feedback.findAll({
+            where,
+            include: joinObjArr,
+          });
+        } else {
+          feedbacks = await Feedback.findAll({
+            include: joinObjArr,
+          });
+        }
+      }
+
+      interface INewFeedback {
+        [key: string]: any;
+      }
+
+      const mapedFeedback: IFeedbackReturn[] = feedbacks.map((feedback) => {
+        const newFeedback: INewFeedback = feedbackValuesAssigner(feedback);
+
+        associationArr.forEach((association) => {
+          newFeedback[association] = feedback.get()[association].get();
+        });
+
+        return newFeedback;
+      });
+
+      this.feedbacks = mapedFeedback;
+    } catch (err) {
+      throw Error(err);
+    }
+    return this.feedbacks;
   }
 
   // Offer methods
