@@ -15,6 +15,7 @@ export function userValuesAssigner(user): IUserReturn {
     username: user.get().username,
     password: user.get().password,
     private_keys: user.get().private_keys,
+    profile_image: user.get().profile_image,
     is_verified: user.get().is_verified,
     is_deleted: user.get().is_deleted,
     when_deleted: user.get().when_deleted,

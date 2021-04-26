@@ -6,6 +6,7 @@ export interface ICreateUser {
   username: string;
   password: string;
   private_keys: string[];
+  profile_image: string;
 }
 
 export interface IUpdateUser {
@@ -15,6 +16,7 @@ export interface IUpdateUser {
   username?: string;
   password?: string;
   private_keys?: string[];
+  profile_image?: string;
   is_verified?: boolean;
   is_deleted?: boolean;
   when_deleted?:
@@ -43,6 +45,7 @@ export interface IDeleteUser {
   username?: string;
   password?: string;
   private_keys?: string[];
+  profile_image?: string;
   is_verified?: boolean;
   is_deleted?: boolean;
   when_deleted?:
@@ -71,6 +74,7 @@ export interface IGetUser {
   username?: string;
   password?: string;
   private_keys?: string[];
+  profile_image?: string;
   is_verified?: boolean;
   is_deleted?: boolean;
   when_deleted?:
@@ -99,6 +103,7 @@ export interface IUserReturn {
   username: string;
   password: string;
   private_keys: string[];
+  profile_image: string;
   is_verified: boolean;
   is_deleted: boolean;
   when_deleted: null | Date;
