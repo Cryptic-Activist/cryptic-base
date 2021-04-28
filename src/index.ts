@@ -323,12 +323,12 @@ export default class CrypticBase {
       const newUser: any = userValuesAssigner(user);
 
       associationArr.forEach((association) => {
-        if (association === 'profile_image') {
-          newUser[association] = user.get()[association].get();
-        } else {
+        if (Array.isArray(user.get()[association])) {
           newUser[association] = user
             .get()
             [association].map((assoc) => ({ ...assoc.get() }));
+        } else {
+          newUser[association] = user.get()[association].get();
         }
       });
 
@@ -383,16 +383,16 @@ export default class CrypticBase {
         [key: string]: any;
       }
 
-      const mapedUsers: IUserReturn[] = users.rows.map((user) => {
+      const mapedUsers: IUserReturn[] = users.map((user) => {
         const newUser: INewUser = userValuesAssigner(user);
 
         associationArr.forEach((association) => {
-          if (association === 'profile_image') {
-            newUser[association] = user.get()[association].get();
-          } else {
+          if (Array.isArray(user.get()[association])) {
             newUser[association] = user
               .get()
               [association].map((assoc) => ({ ...assoc.get() }));
+          } else {
+            newUser[association] = user.get()[association].get();
           }
         });
 
@@ -424,7 +424,7 @@ export default class CrypticBase {
 
       if (where) {
         if (limit) {
-          users = await User.findAll({
+          users = await User.findAndCountAll({
             where,
             include: joinObjArr,
             limit,
@@ -433,7 +433,7 @@ export default class CrypticBase {
         }
       } else {
         if (limit) {
-          users = await User.findAll({
+          users = await User.findAndCountAll({
             include: joinObjArr,
             limit,
             offset: skip,
@@ -449,12 +449,12 @@ export default class CrypticBase {
         const newUser: INewUser = userValuesAssigner(user);
 
         associationArr.forEach((association) => {
-          if (association === 'profile_image') {
-            newUser[association] = user.get()[association].get();
-          } else {
+          if (Array.isArray(user.get()[association])) {
             newUser[association] = user
               .get()
               [association].map((assoc) => ({ ...assoc.get() }));
+          } else {
+            newUser[association] = user.get()[association].get();
           }
         });
 
@@ -2212,3 +2212,13 @@ export default class CrypticBase {
     return this.chatMessages;
   }
 }
+
+const crypticbase = new CrypticBase(false);
+
+async function test() {
+  console.log(
+    await crypticbase.getUsersPagination(10, 0, ['languages', 'profile_image']),
+  );
+}
+
+test();
