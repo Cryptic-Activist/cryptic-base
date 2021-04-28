@@ -115,6 +115,14 @@ export interface IUserReturn {
     created_at: Date;
     updated_at: null | Date;
   }[];
+  profile_image?: {
+    id: BigInt;
+    name: string;
+    key: string;
+    url: string;
+    created_at: Date;
+    updated_at: null | Date;
+  };
 }
 
 // Profile Image
