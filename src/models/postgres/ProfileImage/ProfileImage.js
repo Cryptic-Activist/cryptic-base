@@ -8,10 +8,6 @@ class ProfileImage extends Model {
           type: DataTypes.STRING,
           allowNull: false,
         },
-        size: {
-          type: DataTypes.INTEGER,
-          allowNull: false,
-        },
         key: {
           type: DataTypes.STRING,
           allowNull: false,

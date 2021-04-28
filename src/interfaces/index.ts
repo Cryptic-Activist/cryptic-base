@@ -120,7 +120,6 @@ export interface IUserReturn {
 // Profile Image
 export interface ICreateProfileImage {
   name: string;
-  size: number;
   key: string;
   url: string;
 }
@@ -128,7 +127,6 @@ export interface ICreateProfileImage {
 export interface IUpdateProfileImage {
   id?: BigInt;
   name?: string;
-  size?: number;
   key?: string;
   url?: string;
   is_deleted?: boolean;
@@ -154,7 +152,6 @@ export interface IUpdateProfileImage {
 export interface IDeleteProfileImage {
   id?: BigInt;
   name?: string;
-  size?: number;
   key?: string;
   url?: string;
   is_deleted?: boolean;
@@ -180,7 +177,6 @@ export interface IDeleteProfileImage {
 export interface IGetProfileImage {
   id?: BigInt;
   name?: string;
-  size?: number;
   key?: string;
   url?: string;
   is_deleted?: boolean;
@@ -206,7 +202,6 @@ export interface IGetProfileImage {
 export interface IProfileImageReturn {
   id: BigInt;
   name: string;
-  size: number;
   key: string;
   url: string;
   is_deleted: boolean;
