@@ -2,56 +2,48 @@
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('trades', {
+    await queryInterface.createTable('users', {
       id: {
         type: Sequelize.BIGINT,
         primaryKey: true,
         autoIncrement: true,
         allowNull: false,
       },
-      vendor_id: {
+      profile_image_id: {
         type: Sequelize.BIGINT,
         allowNull: false,
         references: {
-          model: 'users',
+          model: 'profile_images',
           key: 'id',
+          onUpdate: 'CASCADE',
+          onDelete: 'CASCADE',
         },
       },
-      offer_id: {
-        type: Sequelize.BIGINT,
-        allowNull: false,
-        references: {
-          model: 'offers',
-          key: 'id',
-        },
-      },
-      cryptocurrency_id: {
-        type: Sequelize.BIGINT,
-        allowNull: false,
-        references: {
-          model: 'cryptocurrencies',
-          key: 'id',
-        },
-      },
-      chat_id: {
-        type: Sequelize.BIGINT,
-        allowNull: false,
-        references: {
-          model: 'chats',
-          key: 'id',
-        },
-      },
-      started_at: {
-        type: Sequelize.DATE,
+      first_name: {
+        type: Sequelize.STRING,
         allowNull: false,
       },
-      ended_at: {
-        type: Sequelize.DATE,
+      last_name: {
+        type: Sequelize.STRING,
         allowNull: false,
       },
-      state: {
-        type: Sequelize.ENUM(['canceled', 'done', 'error']),
+      username: {
+        type: Sequelize.STRING,
         allowNull: false,
+        unique: true,
+      },
+      password: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      private_keys: {
+        type: Sequelize.ARRAY(Sequelize.STRING),
+        allowNull: false,
+      },
+      is_verified: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
       },
       is_deleted: {
         type: Sequelize.BOOLEAN,
@@ -75,6 +67,6 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('trades');
+    await queryInterface.dropTable('users');
   },
 };

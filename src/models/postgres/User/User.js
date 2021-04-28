@@ -4,6 +4,10 @@ class User extends Model {
   static init(sequelize) {
     return super.init(
       {
+        profile_image_id: {
+          type: DataTypes.BIGINT,
+          allowNull: false,
+        },
         first_name: {
           type: DataTypes.STRING,
           allowNull: false,
@@ -26,10 +30,6 @@ class User extends Model {
         },
         private_keys: {
           type: DataTypes.ARRAY(DataTypes.STRING),
-          allowNull: false,
-        },
-        profile_image: {
-          type: DataTypes.STRING,
           allowNull: false,
         },
         is_verified: {
@@ -55,6 +55,11 @@ class User extends Model {
   }
 
   static associate(models) {
+    this.belongsTo(models.ProfileImage, {
+      foreignKey: 'profile_image_id',
+      as: 'profile_image',
+    });
+
     this.belongsToMany(models.Language, {
       foreignKey: 'user_id',
       through: 'user_languages',
@@ -62,7 +67,9 @@ class User extends Model {
     });
 
     this.hasMany(models.Offer, { foreignKey: 'vendor_id', as: 'offers' });
+
     this.hasMany(models.Trade, { foreignKey: 'vendor_id', as: 'trades' });
+
     this.hasMany(models.Feedback, { foreignKey: 'user_id', as: 'feedbacks' });
   }
 }

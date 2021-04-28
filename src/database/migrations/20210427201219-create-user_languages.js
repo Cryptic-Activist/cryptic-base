@@ -12,16 +12,18 @@ module.exports = {
       user_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        references: { model: 'users', key: 'id' },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE',
+        references: {
+          model: 'users',
+          key: 'id',
+        },
       },
       language_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        references: { model: 'languages', key: 'id' },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE',
+        references: {
+          model: 'languages',
+          key: 'id',
+        },
       },
       is_deleted: {
         type: Sequelize.BOOLEAN,

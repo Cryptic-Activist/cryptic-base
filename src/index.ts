@@ -17,6 +17,8 @@ import {
 import { associationsToArray } from './utils/association/index';
 
 import User from './models/postgres/User/User';
+import ProfileImage from './models/postgres/ProfileImage/ProfileImage';
+import UserLanguages from './models/postgres/UserLanguages/UserLanguages';
 import Language from './models/postgres/Language/Language';
 import PaymentMethod from './models/postgres/PaymentMethod/PaymentMethod';
 import PaymentMethodCategory from './models/postgres/PaymentMethodCategory/PaymentMethodCategory';
@@ -35,6 +37,11 @@ import {
   IDeleteUser,
   IGetUser,
   IUserReturn,
+  ICreateProfileImage,
+  IProfileImageReturn,
+  IUpdateProfileImage,
+  IDeleteProfileImage,
+  IGetProfileImage,
   ICreateLanguage,
   ILanguageReturn,
   ICreateCryptocurrency,
@@ -90,6 +97,11 @@ export default class CrypticBase {
   private deletedUsers: number;
   private users: IUserReturn[];
 
+  private profileImage: IProfileImageReturn;
+  private updatedProfileImages: object;
+  private deletedProfileImages: number;
+  private profileImages: IProfileImageReturn[];
+
   private language: ICreateLanguage;
   private associatedLanguage: ILanguageReturn;
 
@@ -107,6 +119,7 @@ export default class CrypticBase {
   private updatedFeedbacks: object;
   private deletedFeedbacks: number;
   private feedbacks: IFeedbackReturn[];
+  private feedbackCount: number;
 
   private offer: IOfferReturn;
   private updatedOffer: object;
@@ -145,6 +158,107 @@ export default class CrypticBase {
   }
 
   // Postgres
+  // Profile Image methods
+  async createProfileImage(
+    profileImageData: ICreateProfileImage,
+  ): Promise<IProfileImageReturn> {
+    try {
+      const localNewProfileImage = await ProfileImage.create(profileImageData);
+      this.profileImage = localNewProfileImage.get();
+    } catch (err) {
+      throw Error(err);
+    }
+    return this.profileImage;
+  }
+
+  async updateProfileImage(
+    where: WhereOptions<IUpdateProfileImage>,
+    prodileImageDataToUpdate: IUpdateProfileImage,
+  ): Promise<object> {
+    try {
+      const updatedProfileImage: object = await User.update(
+        prodileImageDataToUpdate,
+        {
+          where,
+        },
+      );
+      this.updatedProfileImages = updatedProfileImage;
+    } catch (err) {
+      throw Error(err);
+    }
+    return this.updatedProfileImages;
+  }
+
+  async deleteProfileImage(
+    where: WhereOptions<IDeleteProfileImage>,
+  ): Promise<number> {
+    try {
+      const deletedProfileImage: number = await User.destroy({
+        where,
+      });
+      this.deletedProfileImages = deletedProfileImage;
+    } catch (err) {
+      throw Error(err);
+    }
+    return this.deletedProfileImages;
+  }
+
+  async getProfileImage(
+    where: WhereOptions<IGetProfileImage>,
+  ): Promise<IProfileImageReturn> {
+    try {
+      const profileImage = await ProfileImage.findOne({
+        where,
+      });
+
+      if (!profileImage) {
+        this.profileImage = null;
+        return this.profileImage;
+      }
+
+      this.profileImage = profileImage.get();
+    } catch (err) {
+      throw Error(err);
+    }
+    return this.profileImage;
+  }
+
+  async getProfileImages(
+    limit: null | number,
+    where?: WhereOptions<IGetProfileImage>,
+  ): Promise<IProfileImageReturn[]> {
+    try {
+      let profileImages: any;
+
+      if (where) {
+        if (limit) {
+          profileImages = await User.findAll({
+            where,
+            limit,
+          });
+        } else {
+          profileImages = await User.findAll({
+            where,
+          });
+        }
+      } else {
+        if (limit) {
+          profileImages = await User.findAll({
+            limit,
+          });
+        } else {
+          profileImages = await User.findAll({});
+        }
+      }
+
+      this.profileImages = profileImages.get();
+    } catch (err) {
+      throw Error(err);
+    }
+
+    return this.profileImages;
+  }
+
   // User methods
   async createUser(userData: ICreateUser): Promise<IUserReturn> {
     try {
@@ -185,7 +299,11 @@ export default class CrypticBase {
 
   async getUser(
     where: WhereOptions<IGetUser>,
-    associationArr: [] | ['languages'],
+    associationArr:
+      | []
+      | ['languages']
+      | ['profile_image']
+      | ['languages', 'profile_image'],
   ): Promise<IUserReturn> {
     try {
       let user: any;
@@ -204,7 +322,11 @@ export default class CrypticBase {
 
       const newUser: any = userValuesAssigner(user);
 
+      // console.log(newUser);
+
       associationArr.forEach((association) => {
+        console.log(user.get()[association]);
+        // if(Array.isArray())
         newUser[association] = user
           .get()
           [association].map((assoc) => ({ ...assoc.get() }));
@@ -219,7 +341,11 @@ export default class CrypticBase {
 
   async getUsers(
     limit: null | number,
-    associationArr: [] | ['languages'],
+    associationArr:
+      | []
+      | ['languages']
+      | ['profile_image']
+      | ['languages', 'profile_image'],
     where?: WhereOptions<IGetUser>,
   ): Promise<IUserReturn[]> {
     try {
@@ -280,7 +406,11 @@ export default class CrypticBase {
   async getUsersPagination(
     limit: number,
     skip: number,
-    associationArr: [] | ['languages'],
+    associationArr:
+      | []
+      | ['languages']
+      | ['profile_image']
+      | ['languages', 'profile_image'],
     where?: WhereOptions<IGetUser>,
   ): Promise<IUserReturn[]> {
     try {
@@ -358,8 +488,17 @@ export default class CrypticBase {
         where: { name: languageName },
       });
 
-      // @ts-ignore
-      await user.addLanguage(language);
+      const userLanguage = await UserLanguages.findOne({
+        where: {
+          language_id: parseInt(language.get().id, 10),
+          user_id: parseInt(user.get().id, 10),
+        },
+      });
+
+      if (!userLanguage) {
+        // @ts-ignore
+        await user.addLanguage(language);
+      }
     } catch (err) {
       throw Error(err);
     }
@@ -635,9 +774,13 @@ export default class CrypticBase {
   }
 
   // Feedback methods
-  async createFeedback(fiatData: ICreateFeedback): Promise<IFeedbackReturn> {
+  async createFeedback(
+    feedbackData: ICreateFeedback,
+  ): Promise<IFeedbackReturn> {
+    console.log(feedbackData);
+
     try {
-      const feedback = await Feedback.create(fiatData);
+      const feedback = await Feedback.create(feedbackData);
 
       this.feedback = feedback.get();
     } catch (err) {
@@ -651,7 +794,7 @@ export default class CrypticBase {
     feedbackDataToUpdate: IUpdateFeedback,
   ): Promise<object> {
     try {
-      const updatedFeedback = await Fiat.update(feedbackDataToUpdate, {
+      const updatedFeedback = await Feedback.update(feedbackDataToUpdate, {
         where,
       });
       this.updatedFeedbacks = updatedFeedback;
@@ -678,9 +821,36 @@ export default class CrypticBase {
     try {
       let feedback: any;
 
-      const joinObjArr = associationsToArray(associationArr);
+      const joinObjArr: {
+        association?: string;
+        model?: any;
+        as?: string;
+        include?: any;
+      }[] = associationArr.map((join) => {
+        let joinObj: {
+          association?: string;
+          model?: any;
+          as?: string;
+          include?: any;
+        } = {};
 
-      feedback = await Offer.findOne({
+        if (typeof join === 'string') {
+          joinObj.association = join;
+        }
+
+        if (join === 'user') {
+          joinObj.model = User;
+          joinObj.as = 'user';
+          joinObj.include = {
+            model: ProfileImage,
+            as: 'profile_image',
+          };
+        }
+
+        return joinObj;
+      });
+
+      feedback = await Feedback.findOne({
         where,
         include: joinObjArr,
       });
@@ -693,7 +863,15 @@ export default class CrypticBase {
       const newFeedback: any = feedbackValuesAssigner(feedback);
 
       associationArr.forEach((association) => {
-        newFeedback[association] = feedback.get()[association].get();
+        if (association === 'user') {
+          newFeedback[association] = feedback.get()[association].get();
+          newFeedback[association]['profile_image'] = feedback
+            .get()
+            [association].get()
+            ['profile_image'].get();
+        } else {
+          newFeedback[association] = feedback.get()[association].get();
+        }
       });
 
       this.feedback = newFeedback;
@@ -706,12 +884,39 @@ export default class CrypticBase {
   async getFeedbacks(
     limit: null | number,
     associationArr: [] | ['user'] | ['offer'] | ['user', 'offer'],
-    where?: WhereOptions<IGetOffer>,
+    where?: WhereOptions<IGetFeedback>,
   ): Promise<IFeedbackReturn[]> {
     try {
       let feedbacks: any;
 
-      const joinObjArr = associationsToArray(associationArr);
+      const joinObjArr: {
+        association?: string;
+        model?: any;
+        as?: string;
+        include?: any;
+      }[] = associationArr.map((join) => {
+        let joinObj: {
+          association?: string;
+          model?: any;
+          as?: string;
+          include?: any;
+        } = {};
+
+        if (typeof join === 'string') {
+          joinObj.association = join;
+        }
+
+        if (join === 'user') {
+          joinObj.model = User;
+          joinObj.as = 'user';
+          joinObj.include = {
+            model: ProfileImage,
+            as: 'profile_image',
+          };
+        }
+
+        return joinObj;
+      });
 
       if (limit) {
         if (where) {
@@ -747,7 +952,15 @@ export default class CrypticBase {
         const newFeedback: INewFeedback = feedbackValuesAssigner(feedback);
 
         associationArr.forEach((association) => {
-          newFeedback[association] = feedback.get()[association].get();
+          if (association === 'user') {
+            newFeedback[association] = feedback.get()[association].get();
+            newFeedback[association]['profile_image'] = feedback
+              .get()
+              [association].get()
+              ['profile_image'].get();
+          } else {
+            newFeedback[association] = feedback.get()[association].get();
+          }
         });
 
         return newFeedback;
@@ -758,6 +971,101 @@ export default class CrypticBase {
       throw Error(err);
     }
     return this.feedbacks;
+  }
+
+  async getFeedbacksPagination(
+    limit: number,
+    skip: number,
+    associationArr: [] | ['user'] | ['offer'] | ['user', 'offer'],
+    where?: WhereOptions<IGetFeedback>,
+  ): Promise<IFeedbackReturn[]> {
+    try {
+      let feedbacks: any;
+
+      const joinObjArr: {
+        association?: string;
+        model?: any;
+        as?: string;
+        include?: any;
+      }[] = associationArr.map((join) => {
+        let joinObj: {
+          association?: string;
+          model?: any;
+          as?: string;
+          include?: any;
+        } = {};
+
+        if (typeof join === 'string') {
+          joinObj.association = join;
+        }
+
+        if (join === 'user') {
+          joinObj.model = User;
+          joinObj.as = 'user';
+          joinObj.include = {
+            model: ProfileImage,
+            as: 'profile_image',
+          };
+        }
+
+        return joinObj;
+      });
+
+      if (where) {
+        feedbacks = await Feedback.findAndCountAll({
+          where,
+          include: joinObjArr,
+          limit,
+          offset: skip,
+        });
+      } else {
+        feedbacks = await Feedback.findAndCountAll({
+          include: joinObjArr,
+          limit,
+          offset: skip,
+        });
+      }
+
+      interface INewFeedback {
+        [key: string]: any;
+      }
+
+      const mapedFeedback: IFeedbackReturn[] = feedbacks.rows.map(
+        (feedback) => {
+          const newFeedback: INewFeedback = feedbackValuesAssigner(feedback);
+
+          associationArr.forEach((association) => {
+            if (association === 'user') {
+              newFeedback[association] = feedback.get()[association].get();
+              newFeedback[association]['profile_image'] = feedback
+                .get()
+                [association].get()
+                ['profile_image'].get();
+            } else {
+              newFeedback[association] = feedback.get()[association].get();
+            }
+          });
+
+          return newFeedback;
+        },
+      );
+
+      this.feedbacks = mapedFeedback;
+    } catch (err) {
+      throw Error(err);
+    }
+    return this.feedbacks;
+  }
+
+  async countFeedbacks(where?: WhereOptions<IGetFeedback>): Promise<number> {
+    try {
+      const count = await Feedback.count({ where });
+
+      this.feedbackCount = count;
+    } catch (err) {
+      throw Error(err);
+    }
+    return this.feedbackCount;
   }
 
   // Offer methods

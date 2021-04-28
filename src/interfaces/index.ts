@@ -1,22 +1,22 @@
 // Postgres
 // User
 export interface ICreateUser {
+  profile_image_id: BigInt;
   first_name: string;
   last_name: string;
   username: string;
   password: string;
   private_keys: string[];
-  profile_image: string;
 }
 
 export interface IUpdateUser {
   id?: BigInt;
+  profile_image_id?: BigInt;
   first_name?: string;
   last_name?: string;
   username?: string;
   password?: string;
   private_keys?: string[];
-  profile_image?: string;
   is_verified?: boolean;
   is_deleted?: boolean;
   when_deleted?:
@@ -40,12 +40,12 @@ export interface IUpdateUser {
 
 export interface IDeleteUser {
   id?: BigInt;
+  profile_image_id?: BigInt;
   first_name?: string;
   last_name?: string;
   username?: string;
   password?: string;
   private_keys?: string[];
-  profile_image?: string;
   is_verified?: boolean;
   is_deleted?: boolean;
   when_deleted?:
@@ -69,12 +69,12 @@ export interface IDeleteUser {
 
 export interface IGetUser {
   id?: BigInt;
+  profile_image_id?: BigInt;
   first_name?: string;
   last_name?: string;
   username?: string;
   password?: string;
   private_keys?: string[];
-  profile_image?: string;
   is_verified?: boolean;
   is_deleted?: boolean;
   when_deleted?:
@@ -98,12 +98,12 @@ export interface IGetUser {
 
 export interface IUserReturn {
   id: BigInt;
+  profile_image_id: BigInt;
   first_name: string;
   last_name: string;
   username: string;
   password: string;
   private_keys: string[];
-  profile_image: string;
   is_verified: boolean;
   is_deleted: boolean;
   when_deleted: null | Date;
@@ -117,6 +117,105 @@ export interface IUserReturn {
   }[];
 }
 
+// Profile Image
+export interface ICreateProfileImage {
+  name: string;
+  size: number;
+  key: string;
+  url: string;
+}
+
+export interface IUpdateProfileImage {
+  id?: BigInt;
+  name?: string;
+  size?: number;
+  key?: string;
+  url?: string;
+  is_deleted?: boolean;
+  when_deleted?:
+    | null
+    | Date
+    | { $gt?: Date; $lt?: Date; $gte?: Date; $lte?: Date }
+    | { $or: { $gt?: Date; $lt?: Date; $gte?: Date; $lte?: Date } }
+    | { $and: { $gt?: Date; $lt?: Date; $gte?: Date; $lte?: Date } };
+  created_at?:
+    | Date
+    | { $gt?: Date; $lt?: Date; $gte?: Date; $lte?: Date }
+    | { $or: { $gt?: Date; $lt?: Date; $gte?: Date; $lte?: Date } }
+    | { $and: { $gt?: Date; $lt?: Date; $gte?: Date; $lte?: Date } };
+  updated_at?:
+    | null
+    | Date
+    | { $gt?: Date; $lt?: Date; $gte?: Date; $lte?: Date }
+    | { $or: { $gt?: Date; $lt?: Date; $gte?: Date; $lte?: Date } }
+    | { $and: { $gt?: Date; $lt?: Date; $gte?: Date; $lte?: Date } };
+}
+
+export interface IDeleteProfileImage {
+  id?: BigInt;
+  name?: string;
+  size?: number;
+  key?: string;
+  url?: string;
+  is_deleted?: boolean;
+  when_deleted?:
+    | null
+    | Date
+    | { $gt?: Date; $lt?: Date; $gte?: Date; $lte?: Date }
+    | { $or: { $gt?: Date; $lt?: Date; $gte?: Date; $lte?: Date } }
+    | { $and: { $gt?: Date; $lt?: Date; $gte?: Date; $lte?: Date } };
+  created_at?:
+    | Date
+    | { $gt?: Date; $lt?: Date; $gte?: Date; $lte?: Date }
+    | { $or: { $gt?: Date; $lt?: Date; $gte?: Date; $lte?: Date } }
+    | { $and: { $gt?: Date; $lt?: Date; $gte?: Date; $lte?: Date } };
+  updated_at?:
+    | null
+    | Date
+    | { $gt?: Date; $lt?: Date; $gte?: Date; $lte?: Date }
+    | { $or: { $gt?: Date; $lt?: Date; $gte?: Date; $lte?: Date } }
+    | { $and: { $gt?: Date; $lt?: Date; $gte?: Date; $lte?: Date } };
+}
+
+export interface IGetProfileImage {
+  id?: BigInt;
+  name?: string;
+  size?: number;
+  key?: string;
+  url?: string;
+  is_deleted?: boolean;
+  when_deleted?:
+    | null
+    | Date
+    | { $gt?: Date; $lt?: Date; $gte?: Date; $lte?: Date }
+    | { $or: { $gt?: Date; $lt?: Date; $gte?: Date; $lte?: Date } }
+    | { $and: { $gt?: Date; $lt?: Date; $gte?: Date; $lte?: Date } };
+  created_at?:
+    | Date
+    | { $gt?: Date; $lt?: Date; $gte?: Date; $lte?: Date }
+    | { $or: { $gt?: Date; $lt?: Date; $gte?: Date; $lte?: Date } }
+    | { $and: { $gt?: Date; $lt?: Date; $gte?: Date; $lte?: Date } };
+  updated_at?:
+    | null
+    | Date
+    | { $gt?: Date; $lt?: Date; $gte?: Date; $lte?: Date }
+    | { $or: { $gt?: Date; $lt?: Date; $gte?: Date; $lte?: Date } }
+    | { $and: { $gt?: Date; $lt?: Date; $gte?: Date; $lte?: Date } };
+}
+
+export interface IProfileImageReturn {
+  id: BigInt;
+  name: string;
+  size: number;
+  key: string;
+  url: string;
+  is_deleted: boolean;
+  when_deleted: null | Date;
+  created_at: Date;
+  updated_at: null | Date;
+}
+
+// Language
 export interface ICreateLanguage {
   name: string;
 }

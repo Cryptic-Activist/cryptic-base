@@ -1,29 +1,23 @@
 import { DataTypes, Model } from 'sequelize';
 
-class Feedback extends Model {
+class ProfileImage extends Model {
   static init(sequelize) {
     return super.init(
       {
-        id: {
-          type: DataTypes.BIGINT,
-          primaryKey: true,
-          autoIncrement: true,
-          allowNull: false,
-        },
-        user_id: {
-          type: DataTypes.BIGINT,
-          allowNull: false,
-        },
-        offer_id: {
-          type: DataTypes.BIGINT,
-          allowNull: false,
-        },
-        message: {
+        name: {
           type: DataTypes.STRING,
           allowNull: false,
         },
-        type: {
-          type: DataTypes.ENUM(['positive', 'negative']),
+        size: {
+          type: DataTypes.INTEGER,
+          allowNull: false,
+        },
+        key: {
+          type: DataTypes.STRING,
+          allowNull: false,
+        },
+        url: {
+          type: DataTypes.STRING,
           allowNull: false,
         },
         is_deleted: {
@@ -44,13 +38,11 @@ class Feedback extends Model {
   }
 
   static associate(models) {
-    this.belongsTo(models.Offer, {
-      foreignKey: 'offer_id',
-      as: 'offer',
+    this.hasOne(models.User, {
+      foreignKey: 'profile_image_id',
+      as: 'profile_image',
     });
-
-    this.belongsTo(models.User, { foreignKey: 'user_id', as: 'user' });
   }
 }
 
-export default Feedback;
+export default ProfileImage;
