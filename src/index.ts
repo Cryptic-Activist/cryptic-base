@@ -322,14 +322,14 @@ export default class CrypticBase {
 
       const newUser: any = userValuesAssigner(user);
 
-      // console.log(newUser);
-
       associationArr.forEach((association) => {
-        console.log(user.get()[association]);
-        // if(Array.isArray())
-        newUser[association] = user
-          .get()
-          [association].map((assoc) => ({ ...assoc.get() }));
+        if (association === 'profile_image') {
+          newUser[association] = user.get()[association].get();
+        } else {
+          newUser[association] = user
+            .get()
+            [association].map((assoc) => ({ ...assoc.get() }));
+        }
       });
 
       this.user = newUser;
@@ -383,13 +383,17 @@ export default class CrypticBase {
         [key: string]: any;
       }
 
-      const mapedUsers: IUserReturn[] = users.map((user) => {
+      const mapedUsers: IUserReturn[] = users.rows.map((user) => {
         const newUser: INewUser = userValuesAssigner(user);
 
         associationArr.forEach((association) => {
-          newUser[association] = user
-            .get()
-            [association].map((assoc) => ({ ...assoc.get() }));
+          if (association === 'profile_image') {
+            newUser[association] = user.get()[association].get();
+          } else {
+            newUser[association] = user
+              .get()
+              [association].map((assoc) => ({ ...assoc.get() }));
+          }
         });
 
         return newUser;
@@ -445,9 +449,13 @@ export default class CrypticBase {
         const newUser: INewUser = userValuesAssigner(user);
 
         associationArr.forEach((association) => {
-          newUser[association] = user
-            .get()
-            [association].map((assoc) => ({ ...assoc.get() }));
+          if (association === 'profile_image') {
+            newUser[association] = user.get()[association].get();
+          } else {
+            newUser[association] = user
+              .get()
+              [association].map((assoc) => ({ ...assoc.get() }));
+          }
         });
 
         return newUser;
