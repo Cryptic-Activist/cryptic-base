@@ -1,6 +1,6 @@
 {
   "name": "cryptic-base",
-  "version": "1.7.8",
+  "version": "1.7.9",
   "description": "Configures, sets up database models and implements CRUD methods for the Cryptic Activist platform.",
   "author": "Davi Silva <davi.cunha.silva.ca@gmail.com>",
   "source": "src/index.ts",
