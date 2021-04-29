@@ -89,8 +89,6 @@ export function tradeValuesAssigner(trade): ITradeReturn {
 export function feedbackValuesAssigner(feedback): IFeedbackReturn {
   return {
     id: feedback.get().id,
-    user_id: feedback.get().user_id,
-    offer_id: feedback.get().offer_id,
     message: feedback.get().message,
     type: feedback.get().type,
     is_deleted: feedback.get().is_deleted,

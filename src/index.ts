@@ -785,8 +785,6 @@ export default class CrypticBase {
   async createFeedback(
     feedbackData: ICreateFeedback,
   ): Promise<IFeedbackReturn> {
-    console.log(feedbackData);
-
     try {
       const feedback = await Feedback.create(feedbackData);
 
