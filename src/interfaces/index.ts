@@ -313,6 +313,7 @@ export interface IGetFiat {
 
 // Feedback
 export interface ICreateFeedback {
+  vendor_id: BigInt;
   user_id: BigInt;
   offer_id: BigInt;
   message: string;
