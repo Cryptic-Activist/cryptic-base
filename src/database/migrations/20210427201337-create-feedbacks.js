@@ -9,15 +9,26 @@ module.exports = {
         autoIncrement: true,
         allowNull: false,
       },
+      vendor_id: {
+        type: Sequelize.BIGINT,
+        allowNull: false,
+        references: { model: 'users', key: 'id' },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
+      },
       user_id: {
         type: Sequelize.BIGINT,
         allowNull: false,
         references: { model: 'users', key: 'id' },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
       },
       offer_id: {
         type: Sequelize.BIGINT,
         allowNull: false,
         references: { model: 'offers', key: 'id' },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
       },
       message: {
         type: Sequelize.STRING,

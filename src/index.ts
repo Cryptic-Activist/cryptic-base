@@ -2212,13 +2212,3 @@ export default class CrypticBase {
     return this.chatMessages;
   }
 }
-
-const crypticbase = new CrypticBase(false);
-
-async function test() {
-  console.log(
-    await crypticbase.getUsersPagination(10, 0, ['languages', 'profile_image']),
-  );
-}
-
-test();

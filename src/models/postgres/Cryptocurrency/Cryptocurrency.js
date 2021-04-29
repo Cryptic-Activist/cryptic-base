@@ -41,6 +41,7 @@ class Cryptocurrency extends Model {
       foreignKey: 'cryptocurrency_id',
       as: 'offers',
     });
+
     this.hasMany(models.Trade, {
       foreignKey: 'cryptocurrency_id',
       as: 'trades',

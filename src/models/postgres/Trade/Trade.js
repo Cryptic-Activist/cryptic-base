@@ -16,6 +16,10 @@ class Trade extends Model {
           type: DataTypes.BIGINT,
           allowNull: false,
         },
+        fiat_id: {
+          type: DataTypes.BIGINT,
+          allowNull: false,
+        },
         chat_id: {
           type: DataTypes.BIGINT,
           allowNull: false,
@@ -55,6 +59,11 @@ class Trade extends Model {
     this.belongsTo(models.Cryptocurrency, {
       foreignKey: 'cryptocurrency_id',
       as: 'cryptocurrency',
+    });
+
+    this.belongsTo(models.Fiat, {
+      foreignKey: 'fiat_id',
+      as: 'fiat',
     });
 
     this.belongsTo(models.Chat, { foreignKey: 'chat_id', as: 'chat' });

@@ -36,6 +36,11 @@ class Fiat extends Model {
       foreignKey: 'fiat_id',
       as: 'offers',
     });
+
+    this.hasMany(models.Trade, {
+      foreignKey: 'fiat_id',
+      as: 'trades',
+    });
   }
 }
 

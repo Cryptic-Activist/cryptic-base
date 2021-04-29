@@ -10,10 +10,14 @@ class Feedback extends Model {
           autoIncrement: true,
           allowNull: false,
         },
-        user_id: {
+        vendor_id: {
           type: DataTypes.BIGINT,
           allowNull: false,
         },
+        // user_id: {
+        //   type: DataTypes.BIGINT,
+        //   allowNull: false,
+        // },
         offer_id: {
           type: DataTypes.BIGINT,
           allowNull: false,
@@ -50,6 +54,8 @@ class Feedback extends Model {
     });
 
     this.belongsTo(models.User, { foreignKey: 'user_id', as: 'user' });
+
+    this.belongsTo(models.User, { foreignKey: 'vendor_id', as: 'vendor' });
   }
 }
 

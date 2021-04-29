@@ -321,18 +321,49 @@ export interface ICreateFeedback {
 
 export interface IFeedbackReturn {
   id: BigInt;
-  user_id: BigInt;
-  offer_id: BigInt;
   message: string;
   type: 'positive' | 'negative';
   is_deleted: boolean;
   when_deleted: null | Date;
   created_at: Date;
   updated_at: Date;
+  vendor?: {
+    first_name: string;
+    last_name: string;
+    username: string;
+    password: string;
+    private_keys: string[];
+  };
+  user?: {
+    first_name: string;
+    last_name: string;
+    username: string;
+    password: string;
+    private_keys: string[];
+  };
+  offer?: {
+    id: BigInt;
+    payment_method_type: 'buy' | 'sell';
+    payment_method_id: BigInt;
+    trade_pricing_type: 'market' | 'fixed';
+    trade_pricing_list_at: number;
+    trade_pricing_trade_limits_min: number;
+    trade_pricing_trade_limits_max: number;
+    trade_pricing_time_limit: number;
+    trade_instructions_tags: string[];
+    trade_instructions_label: string;
+    trade_instructions_terms: string;
+    trade_instructions_instructions: string;
+    is_deleted: boolean;
+    when_deleted: null | Date;
+    created_at: Date;
+    updated_at: null | Date;
+  };
 }
 
 export interface IUpdateFeedback {
   id?: BigInt;
+  vendor_id?: BigInt;
   user_id?: BigInt;
   offer_id?: BigInt;
   message?: string;
@@ -345,6 +376,7 @@ export interface IUpdateFeedback {
 
 export interface IDeleteFeedback {
   id?: BigInt;
+  vendor_id?: BigInt;
   user_id?: BigInt;
   offer_id?: BigInt;
   message?: string;
@@ -357,6 +389,7 @@ export interface IDeleteFeedback {
 
 export interface IGetFeedback {
   id?: BigInt;
+  vendor_id?: BigInt;
   user_id?: BigInt;
   offer_id?: BigInt;
   message?: string;

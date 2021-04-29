@@ -2,33 +2,63 @@
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('feedbacks', {
+    await queryInterface.createTable('trades', {
       id: {
         type: Sequelize.BIGINT,
         primaryKey: true,
         autoIncrement: true,
         allowNull: false,
       },
-      user_id: {
+      vendor_id: {
         type: Sequelize.BIGINT,
         allowNull: false,
-        references: { model: 'users', key: 'id' },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE',
+        references: {
+          model: 'users',
+          key: 'id',
+        },
       },
       offer_id: {
         type: Sequelize.BIGINT,
         allowNull: false,
-        references: { model: 'offers', key: 'id' },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE',
+        references: {
+          model: 'offers',
+          key: 'id',
+        },
       },
-      message: {
-        type: Sequelize.STRING,
+      cryptocurrency_id: {
+        type: Sequelize.BIGINT,
+        allowNull: false,
+        references: {
+          model: 'cryptocurrencies',
+          key: 'id',
+        },
+      },
+      fiat_id: {
+        type: Sequelize.BIGINT,
+        allowNull: false,
+        references: {
+          model: 'fiats',
+          key: 'id',
+        },
+      },
+      chat_id: {
+        type: Sequelize.BIGINT,
+        allowNull: false,
+        references: {
+          model: 'chats',
+          key: 'id',
+        },
+      },
+      started_at: {
+        type: Sequelize.DATE,
         allowNull: false,
       },
-      type: {
-        type: Sequelize.ENUM(['positive', 'negative']),
+      ended_at: {
+        type: Sequelize.DATE,
+        allowNull: false,
+      },
+      state: {
+        type: Sequelize.ENUM(['canceled', 'done', 'error']),
         allowNull: false,
       },
       is_deleted: {
@@ -53,6 +83,6 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('feedbacks');
+    await queryInterface.dropTable('trades');
   },
 };
