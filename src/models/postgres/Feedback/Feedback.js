@@ -14,10 +14,10 @@ class Feedback extends Model {
           type: DataTypes.BIGINT,
           allowNull: false,
         },
-        // user_id: {
-        //   type: DataTypes.BIGINT,
-        //   allowNull: false,
-        // },
+        user_id: {
+          type: DataTypes.BIGINT,
+          allowNull: false,
+        },
         offer_id: {
           type: DataTypes.BIGINT,
           allowNull: false,
