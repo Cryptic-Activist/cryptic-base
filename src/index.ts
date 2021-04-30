@@ -13,6 +13,8 @@ import {
   paymentMethodValuesAssigner,
   paymentMethodCategoryValuesAssigner,
   feedbackValuesAssigner,
+  blockValuesAssigner,
+  trustValuesAssigner,
 } from './utils/assigner/index';
 import { associationsToArray } from './utils/association/index';
 
@@ -28,6 +30,8 @@ import Fiat from './models/postgres/Fiat/Fiat';
 import Feedback from './models/postgres/Feedback/Feedback';
 import Trade from './models/postgres/Trade/Trade';
 import Chat from './models/postgres/Chat/Chat';
+import Block from './models/postgres/Block/Block';
+import Trust from './models/postgres/Trust/Trust';
 
 import ChatMessage from './models/mongoDB/ChatMessage/ChatMessage';
 
@@ -59,6 +63,16 @@ import {
   IUpdateFeedback,
   IDeleteFeedback,
   IGetFeedback,
+  ICreateBlock,
+  IBlockReturn,
+  IUpdateBlock,
+  IDeleteBlock,
+  IGetBlock,
+  ICreateTrust,
+  ITrustReturn,
+  IUpdateTrust,
+  IDeleteTrust,
+  IGetTrust,
   ICreateOffer,
   IOfferReturn,
   IUpdateOffer,
@@ -120,6 +134,18 @@ export default class CrypticBase {
   private deletedFeedbacks: number;
   private feedbacks: IFeedbackReturn[];
   private feedbackCount: number;
+
+  private block: IBlockReturn;
+  private updatedBlocks: object;
+  private deletedBlocks: number;
+  private blocks: IBlockReturn[];
+  private blockCount: number;
+
+  private trust: IBlockReturn;
+  private updatedTrusts: object;
+  private deletedTrusts: number;
+  private trusts: IBlockReturn[];
+  private trustCount: number;
 
   private offer: IOfferReturn;
   private updatedOffer: object;
@@ -1072,6 +1098,582 @@ export default class CrypticBase {
       throw Error(err);
     }
     return this.feedbackCount;
+  }
+
+  // Block methods
+  async createBlock(blockData: ICreateBlock): Promise<IBlockReturn> {
+    try {
+      // @ts-ignore
+      const block = await Block.findOne({ where: blockData });
+
+      if (block) {
+        this.block = null;
+        return this.block;
+      }
+
+      const newBlock = await Block.create(blockData);
+
+      this.block = newBlock.get();
+    } catch (err) {
+      throw Error(err);
+    }
+    return this.block;
+  }
+
+  async updateBlock(
+    where: WhereOptions<IUpdateBlock>,
+    blockDataToUpdate: IUpdateBlock,
+  ): Promise<object> {
+    try {
+      const updatedBlock = await Block.update(blockDataToUpdate, {
+        where,
+      });
+      this.updatedBlocks = updatedBlock;
+    } catch (err) {
+      throw Error(err);
+    }
+    return this.updatedBlocks;
+  }
+
+  async deleteBlock(where: WhereOptions<IDeleteBlock>): Promise<number> {
+    try {
+      const deletedBlock = await Block.destroy({ where });
+      this.deletedBlocks = deletedBlock;
+    } catch (err) {
+      throw Error(err);
+    }
+    return this.deletedBlocks;
+  }
+
+  async getBlock(
+    where: WhereOptions<IGetBlock>,
+    associationArr: [] | ['blocker'] | ['blocked'] | ['blocker', 'blocked'],
+  ): Promise<IBlockReturn> {
+    try {
+      let block: any;
+
+      const joinObjArr: {
+        association?: string;
+        model?: any;
+        as?: string;
+        include?: any;
+      }[] = associationArr.map((join) => {
+        let joinObj: {
+          association?: string;
+          model?: any;
+          as?: string;
+          include?: any;
+        } = {};
+
+        if (typeof join === 'string') {
+          joinObj.association = join;
+        }
+
+        if (join === 'blocker' || join === 'blocked') {
+          joinObj.model = User;
+          joinObj.as = join;
+          joinObj.include = {
+            model: ProfileImage,
+            as: 'profile_image',
+          };
+        }
+
+        return joinObj;
+      });
+
+      block = await Block.findOne({
+        where,
+        include: joinObjArr,
+      });
+
+      if (!block) {
+        this.block = null;
+        return this.block;
+      }
+
+      const newBlock: any = blockValuesAssigner(block);
+
+      associationArr.forEach((association) => {
+        newBlock[association] = block.get()[association].get();
+        newBlock[association]['profile_image'] = block
+          .get()
+          [association].get()
+          ['profile_image'].get();
+      });
+
+      this.block = newBlock;
+    } catch (err) {
+      throw Error(err);
+    }
+    return this.block;
+  }
+
+  async getBlocks(
+    limit: null | number,
+    associationArr: [] | ['blocker'] | ['blocked'] | ['blocker', 'blocked'],
+    where?: WhereOptions<IGetBlock>,
+  ): Promise<IBlockReturn[]> {
+    try {
+      let blocks: any;
+
+      const joinObjArr: {
+        association?: string;
+        model?: any;
+        as?: string;
+        include?: any;
+      }[] = associationArr.map((join) => {
+        let joinObj: {
+          association?: string;
+          model?: any;
+          as?: string;
+          include?: any;
+        } = {};
+
+        if (typeof join === 'string') {
+          joinObj.association = join;
+        }
+
+        if (join === 'blocker' || join === 'blocked') {
+          joinObj.model = User;
+          joinObj.as = join;
+          joinObj.include = {
+            model: ProfileImage,
+            as: 'profile_image',
+          };
+        }
+
+        return joinObj;
+      });
+
+      if (limit) {
+        if (where) {
+          blocks = await Block.findAll({
+            where,
+            include: joinObjArr,
+            limit,
+          });
+        } else {
+          blocks = await Block.findAll({
+            include: joinObjArr,
+            limit,
+          });
+        }
+      } else {
+        if (where) {
+          blocks = await Block.findAll({
+            where,
+            include: joinObjArr,
+          });
+        } else {
+          blocks = await Block.findAll({
+            include: joinObjArr,
+          });
+        }
+      }
+
+      interface INewBlock {
+        [key: string]: any;
+      }
+
+      const mapedBlock: IBlockReturn[] = blocks.map((block) => {
+        const newBlock: INewBlock = blockValuesAssigner(block);
+
+        associationArr.forEach((association) => {
+          newBlock[association] = block.get()[association].get();
+          newBlock[association]['profile_image'] = block
+            .get()
+            [association].get()
+            ['profile_image'].get();
+        });
+
+        return newBlock;
+      });
+
+      this.blocks = mapedBlock;
+    } catch (err) {
+      throw Error(err);
+    }
+    return this.blocks;
+  }
+
+  async getBlocksPagination(
+    limit: number,
+    skip: number,
+    associationArr: [] | ['blocker'] | ['blocked'] | ['blocker', 'blocked'],
+    where?: WhereOptions<IGetBlock>,
+  ): Promise<IBlockReturn[]> {
+    try {
+      let blocks: any;
+
+      const joinObjArr: {
+        association?: string;
+        model?: any;
+        as?: string;
+        include?: any;
+      }[] = associationArr.map((join) => {
+        let joinObj: {
+          association?: string;
+          model?: any;
+          as?: string;
+          include?: any;
+        } = {};
+
+        if (typeof join === 'string') {
+          joinObj.association = join;
+        }
+
+        if (join === 'blocker' || join === 'blocked') {
+          joinObj.model = User;
+          joinObj.as = join;
+          joinObj.include = {
+            model: ProfileImage,
+            as: 'profile_image',
+          };
+        }
+
+        return joinObj;
+      });
+
+      if (where) {
+        blocks = await Block.findAndCountAll({
+          where,
+          // @ts-ignore
+          include: joinObjArr,
+          limit,
+          offset: skip,
+        });
+      } else {
+        blocks = await Block.findAndCountAll({
+          // @ts-ignore
+          include: joinObjArr,
+          limit,
+          offset: skip,
+        });
+      }
+
+      interface INewBlock {
+        [key: string]: any;
+      }
+
+      const mapedBlock: IBlockReturn[] = blocks.rows.map((block) => {
+        const newBlock: INewBlock = blockValuesAssigner(block);
+
+        associationArr.forEach((association) => {
+          newBlock[association] = block.get()[association].get();
+          newBlock[association]['profile_image'] = block
+            .get()
+            [association].get()
+            ['profile_image'].get();
+        });
+
+        return newBlock;
+      });
+
+      this.blocks = mapedBlock;
+    } catch (err) {
+      throw Error(err);
+    }
+    return this.blocks;
+  }
+
+  async countBlocks(where?: WhereOptions<IGetBlock>): Promise<number> {
+    try {
+      const count = await Block.count({ where });
+
+      this.blockCount = count;
+    } catch (err) {
+      throw Error(err);
+    }
+    return this.blockCount;
+  }
+
+  // Trust methods
+  async createTrust(trustData: ICreateTrust): Promise<ITrustReturn> {
+    try {
+      // @ts-ignore
+      const trust = await Trust.findOne({ where: trustData });
+
+      if (trust) {
+        this.trust = null;
+        return this.trust;
+      }
+
+      const newTrust = await Trust.create(trustData);
+
+      this.trust = newTrust.get();
+    } catch (err) {
+      throw Error(err);
+    }
+    return this.trust;
+  }
+
+  async updateTrust(
+    where: WhereOptions<IUpdateTrust>,
+    trustDataToUpdate: IUpdateTrust,
+  ): Promise<object> {
+    try {
+      const updatedTrust = await Trust.update(trustDataToUpdate, {
+        where,
+      });
+      this.updatedTrusts = updatedTrust;
+    } catch (err) {
+      throw Error(err);
+    }
+    return this.updatedTrusts;
+  }
+
+  async deleteTrust(where: WhereOptions<IDeleteTrust>): Promise<number> {
+    try {
+      const deletedTrust = await Trust.destroy({ where });
+      this.deletedTrusts = deletedTrust;
+    } catch (err) {
+      throw Error(err);
+    }
+    return this.deletedTrusts;
+  }
+
+  async getTrust(
+    where: WhereOptions<IGetTrust>,
+    associationArr: [] | ['truster'] | ['trusted'] | ['truster', 'trusted'],
+  ): Promise<ITrustReturn> {
+    try {
+      let trust: any;
+
+      const joinObjArr: {
+        association?: string;
+        model?: any;
+        as?: string;
+        include?: any;
+      }[] = associationArr.map((join) => {
+        let joinObj: {
+          association?: string;
+          model?: any;
+          as?: string;
+          include?: any;
+        } = {};
+
+        if (typeof join === 'string') {
+          joinObj.association = join;
+        }
+
+        if (join === 'truster' || join === 'trusted') {
+          joinObj.model = User;
+          joinObj.as = join;
+          joinObj.include = {
+            model: ProfileImage,
+            as: 'profile_image',
+          };
+        }
+
+        return joinObj;
+      });
+
+      trust = await Trust.findOne({
+        where,
+        include: joinObjArr,
+      });
+
+      if (!trust) {
+        this.trust = null;
+        return this.trust;
+      }
+
+      const newTrust: any = trustValuesAssigner(trust);
+
+      associationArr.forEach((association) => {
+        console.log('association:', association);
+        console.log('trust.get()[association]:', trust.get()[association]);
+        newTrust[association] = trust.get()[association].get();
+        newTrust[association]['profile_image'] = trust
+          .get()
+          [association].get()
+          ['profile_image'].get();
+      });
+
+      this.trust = newTrust;
+    } catch (err) {
+      throw Error(err);
+    }
+    return this.trust;
+  }
+
+  async getTrusts(
+    limit: null | number,
+    associationArr: [] | ['truster'] | ['trusted'] | ['truster', 'trusted'],
+    where?: WhereOptions<IGetTrust>,
+  ): Promise<ITrustReturn[]> {
+    try {
+      let trusts: any;
+
+      const joinObjArr: {
+        association?: string;
+        model?: any;
+        as?: string;
+        include?: any;
+      }[] = associationArr.map((join) => {
+        let joinObj: {
+          association?: string;
+          model?: any;
+          as?: string;
+          include?: any;
+        } = {};
+
+        if (typeof join === 'string') {
+          joinObj.association = join;
+        }
+
+        if (join === 'truster' || join === 'trusted') {
+          joinObj.model = User;
+          joinObj.as = join;
+          joinObj.include = {
+            model: ProfileImage,
+            as: 'profile_image',
+          };
+        }
+
+        return joinObj;
+      });
+
+      if (limit) {
+        if (where) {
+          trusts = await Trust.findAll({
+            where,
+            include: joinObjArr,
+            limit,
+          });
+        } else {
+          trusts = await Trust.findAll({
+            include: joinObjArr,
+            limit,
+          });
+        }
+      } else {
+        if (where) {
+          trusts = await Trust.findAll({
+            where,
+            include: joinObjArr,
+          });
+        } else {
+          trusts = await Trust.findAll({
+            include: joinObjArr,
+          });
+        }
+      }
+
+      interface INewTrust {
+        [key: string]: any;
+      }
+
+      const mapedTrust: ITrustReturn[] = trusts.map((trust) => {
+        const newTrust: INewTrust = trustValuesAssigner(trust);
+
+        associationArr.forEach((association) => {
+          newTrust[association] = trust.get()[association].get();
+          newTrust[association]['profile_image'] = trust
+            .get()
+            [association].get()
+            ['profile_image'].get();
+        });
+
+        return newTrust;
+      });
+
+      this.trusts = mapedTrust;
+    } catch (err) {
+      throw Error(err);
+    }
+    return this.trusts;
+  }
+
+  async getTrustsPagination(
+    limit: number,
+    skip: number,
+    associationArr: [] | ['truster'] | ['trusted'] | ['truster', 'trusted'],
+    where?: WhereOptions<IGetBlock>,
+  ): Promise<ITrustReturn[]> {
+    try {
+      let trusts: any;
+
+      const joinObjArr: {
+        association?: string;
+        model?: any;
+        as?: string;
+        include?: any;
+      }[] = associationArr.map((join) => {
+        let joinObj: {
+          association?: string;
+          model?: any;
+          as?: string;
+          include?: any;
+        } = {};
+
+        if (typeof join === 'string') {
+          joinObj.association = join;
+        }
+
+        if (join === 'truster' || join === 'trusted') {
+          joinObj.model = User;
+          joinObj.as = join;
+          joinObj.include = {
+            model: ProfileImage,
+            as: 'profile_image',
+          };
+        }
+
+        return joinObj;
+      });
+
+      if (where) {
+        trusts = await Trust.findAndCountAll({
+          where,
+          // @ts-ignore
+          include: joinObjArr,
+          limit,
+          offset: skip,
+        });
+      } else {
+        trusts = await Trust.findAndCountAll({
+          // @ts-ignore
+          include: joinObjArr,
+          limit,
+          offset: skip,
+        });
+      }
+
+      interface INewTrust {
+        [key: string]: any;
+      }
+
+      const mapedTrust: ITrustReturn[] = trusts.rows.map((block) => {
+        const newTrust: INewTrust = blockValuesAssigner(block);
+
+        associationArr.forEach((association) => {
+          newTrust[association] = block.get()[association].get();
+          newTrust[association]['profile_image'] = block
+            .get()
+            [association].get()
+            ['profile_image'].get();
+        });
+
+        return newTrust;
+      });
+
+      this.trusts = mapedTrust;
+    } catch (err) {
+      throw Error(err);
+    }
+    return this.trusts;
+  }
+
+  async countTrusts(where?: WhereOptions<IGetTrust>): Promise<number> {
+    try {
+      const count = await Trust.count({ where });
+
+      this.trustCount = count;
+    } catch (err) {
+      throw Error(err);
+    }
+    return this.trustCount;
   }
 
   // Offer methods

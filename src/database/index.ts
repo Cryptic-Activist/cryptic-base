@@ -12,6 +12,8 @@ import Trade from '../models/postgres/Trade/Trade';
 import Chat from '../models/postgres/Chat/Chat';
 import PaymentMethod from '../models/postgres/PaymentMethod/PaymentMethod';
 import PaymentMethodCategory from '../models/postgres/PaymentMethodCategory/PaymentMethodCategory';
+import Block from '../models/postgres/Block/Block';
+import Trust from '../models/postgres/Trust/Trust';
 
 User.init(connection);
 ProfileImage.init(connection);
@@ -25,6 +27,8 @@ Trade.init(connection);
 Chat.init(connection);
 PaymentMethod.init(connection);
 PaymentMethodCategory.init(connection);
+Block.init(connection);
+Trust.init(connection);
 
 User.associate(connection.models);
 ProfileImage.associate(connection.models);
@@ -37,5 +41,7 @@ Trade.associate(connection.models);
 Chat.associate(connection.models);
 PaymentMethod.associate(connection.models);
 PaymentMethodCategory.associate(connection.models);
+Block.associate(connection.models);
+Trust.associate(connection.models);
 
 export default connection;

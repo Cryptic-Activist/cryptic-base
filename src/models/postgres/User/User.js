@@ -79,6 +79,14 @@ class User extends Model {
       foreignKey: 'vendor_id',
       as: 'vendorFeedbacks',
     });
+
+    this.hasMany(models.Block, { foreignKey: 'blocker_id', as: 'blocker' });
+
+    this.hasMany(models.Block, { foreignKey: 'blocked_id', as: 'blocked' });
+
+    this.hasMany(models.Trust, { foreignKey: 'truster_id', as: 'truster' });
+
+    this.hasMany(models.Trust, { foreignKey: 'trusted_id', as: 'trusted' });
   }
 }
 

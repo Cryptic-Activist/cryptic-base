@@ -5,6 +5,8 @@ import {
   IFeedbackReturn,
   IPaymentMethodReturn,
   IPaymentMethodCategoryReturn,
+  IBlockReturn,
+  ITrustReturn,
 } from '../../interfaces/index';
 
 export function userValuesAssigner(user): IUserReturn {
@@ -95,5 +97,25 @@ export function feedbackValuesAssigner(feedback): IFeedbackReturn {
     when_deleted: feedback.get().when_deleted,
     created_at: feedback.get().createdAt,
     updated_at: feedback.get().updatedAt,
+  };
+}
+
+export function blockValuesAssigner(block): IBlockReturn {
+  return {
+    id: block.get().id,
+    is_deleted: block.get().is_deleted,
+    when_deleted: block.get().when_deleted,
+    created_at: block.get().createdAt,
+    updated_at: block.get().updatedAt,
+  };
+}
+
+export function trustValuesAssigner(trust): ITrustReturn {
+  return {
+    id: trust.get().id,
+    is_deleted: trust.get().is_deleted,
+    when_deleted: trust.get().when_deleted,
+    created_at: trust.get().createdAt,
+    updated_at: trust.get().updatedAt,
   };
 }

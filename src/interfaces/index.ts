@@ -401,6 +401,114 @@ export interface IGetFeedback {
   updated_at?: Date;
 }
 
+// Block
+export interface ICreateBlock {
+  blocker_id: BigInt;
+  blocked_id: BigInt;
+}
+
+export interface IBlockReturn {
+  id: BigInt;
+  is_deleted: boolean;
+  when_deleted: null | Date;
+  created_at: Date;
+  updated_at: Date;
+  blocker?: {
+    first_name: string;
+    last_name: string;
+    username: string;
+  };
+  blocked?: {
+    first_name: string;
+    last_name: string;
+    username: string;
+  };
+}
+
+export interface IUpdateBlock {
+  id?: BigInt;
+  blocker_id?: BigInt;
+  blocked_id?: BigInt;
+  is_deleted?: boolean;
+  when_deleted?: null | Date;
+  created_at?: Date;
+  updated_at?: Date;
+}
+
+export interface IDeleteBlock {
+  id?: BigInt;
+  blocker_id?: BigInt;
+  blocked_id?: BigInt;
+  is_deleted?: boolean;
+  when_deleted?: null | Date;
+  created_at?: Date;
+  updated_at?: Date;
+}
+
+export interface IGetBlock {
+  id?: BigInt;
+  blocker_id?: BigInt;
+  blocked_id?: BigInt;
+  is_deleted?: boolean;
+  when_deleted?: null | Date;
+  created_at?: Date;
+  updated_at?: Date;
+}
+
+// Trust
+export interface ICreateTrust {
+  truster_id: BigInt;
+  trusted_id: BigInt;
+}
+
+export interface ITrustReturn {
+  id: BigInt;
+  is_deleted: boolean;
+  when_deleted: null | Date;
+  created_at: Date;
+  updated_at: Date;
+  truster?: {
+    first_name: string;
+    last_name: string;
+    username: string;
+  };
+  trusted?: {
+    first_name: string;
+    last_name: string;
+    username: string;
+  };
+}
+
+export interface IUpdateTrust {
+  id?: BigInt;
+  truster_id?: BigInt;
+  trusted_id?: BigInt;
+  is_deleted?: boolean;
+  when_deleted?: null | Date;
+  created_at?: Date;
+  updated_at?: Date;
+}
+
+export interface IDeleteTrust {
+  id?: BigInt;
+  truster_id?: BigInt;
+  trusted_id?: BigInt;
+  is_deleted?: boolean;
+  when_deleted?: null | Date;
+  created_at?: Date;
+  updated_at?: Date;
+}
+
+export interface IGetTrust {
+  id?: BigInt;
+  truster_id?: BigInt;
+  trusted_id?: BigInt;
+  is_deleted?: boolean;
+  when_deleted?: null | Date;
+  created_at?: Date;
+  updated_at?: Date;
+}
+
 // Offer
 export interface ICreateOffer {
   vendor_id: BigInt;
