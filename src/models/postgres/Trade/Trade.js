@@ -34,7 +34,8 @@ class Trade extends Model {
         },
         ended_at: {
           type: DataTypes.DATE,
-          allowNull: false,
+          allowNull: true,
+          defaultValue: null,
         },
         state: {
           type: DataTypes.ENUM(['canceled', 'done', 'error']),
