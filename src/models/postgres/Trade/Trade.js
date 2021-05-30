@@ -39,7 +39,7 @@ class Trade extends Model {
           defaultValue: null,
         },
         state: {
-          type: DataTypes.ENUM(['canceled', 'done', 'error']),
+          type: DataTypes.ENUM(['ongoing', 'canceled', 'done', 'error']),
           allowNull: false,
         },
         is_deleted: {

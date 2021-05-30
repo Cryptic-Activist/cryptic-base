@@ -67,7 +67,7 @@ module.exports = {
         defaultValue: null,
       },
       state: {
-        type: Sequelize.ENUM(['canceled', 'done', 'error']),
+        type: Sequelize.ENUM(['ongoing', 'canceled', 'done', 'error']),
         allowNull: false,
       },
       is_deleted: {
