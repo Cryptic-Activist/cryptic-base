@@ -545,7 +545,7 @@ export interface IOfferReturn {
   created_at: Date;
   updated_at: null | Date;
   vendor?: {
-    id?: string;
+    id?: BigInt;
     first_name?: string;
     last_name?: string;
     username?: string;
