@@ -876,20 +876,41 @@ export interface ICreateTrade {
   offer_id: BigInt;
   cryptocurrency_id: BigInt;
   chat_id: BigInt;
-  started_at: Date;
-  ended_at: Date;
   state: 'canceled' | 'done' | 'error';
 }
 
 export interface ITradeReturn {
   id: BigInt;
   started_at: Date;
-  ended_at: Date;
+  ended_at: null | Date;
   state: 'canceled' | 'done' | 'error';
   is_deleted: boolean;
   when_deleted: null | Date;
   created_at: Date;
   updated_at: null | Date;
+  vendor?: {
+    id?: BigInt;
+    first_name?: string;
+    last_name?: string;
+    username?: string;
+  };
+  trader?: {
+    id?: BigInt;
+    first_name?: string;
+    last_name?: string;
+    username?: string;
+  };
+  cryptocurrency?: {
+    id?: BigInt;
+    name?: string;
+    symbol?: string;
+    icon?: string;
+  };
+  fiat?: {
+    id?: BigInt;
+    name?: string;
+    symbol?: string;
+  };
 }
 
 export interface IUpdateTrade {
@@ -899,7 +920,7 @@ export interface IUpdateTrade {
   offer_id?: BigInt;
   cryptocurrency_id?: BigInt;
   chat_id?: BigInt;
-  started_at?: Date;
+  started_at?: null | Date;
   ended_at?: Date;
   state?: 'canceled' | 'done' | 'error';
   is_deleted?: boolean;
@@ -929,7 +950,7 @@ export interface IDeleteTrade {
   offer_id?: BigInt;
   cryptocurrency_id?: BigInt;
   chat_id?: BigInt;
-  started_at?: Date;
+  started_at?: null | Date;
   ended_at?: Date;
   state?: 'canceled' | 'done' | 'error';
   is_deleted?: boolean;
@@ -959,7 +980,7 @@ export interface IGetTrade {
   offer_id?: BigInt;
   cryptocurrency_id?: BigInt;
   chat_id?: BigInt;
-  started_at?: Date;
+  started_at?: null | Date;
   ended_at?: Date;
   state?: 'canceled' | 'done' | 'error';
   is_deleted?: boolean;

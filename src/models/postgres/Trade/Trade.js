@@ -31,6 +31,7 @@ class Trade extends Model {
         started_at: {
           type: DataTypes.DATE,
           allowNull: false,
+          defaultValue: new Date(),
         },
         ended_at: {
           type: DataTypes.DATE,
