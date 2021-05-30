@@ -1746,6 +1746,7 @@ export default class CrypticBase {
       const newOffer: any = offerValuesAssigner(offer);
 
       associationArr.forEach((association) => {
+        console.log(offer.get()[association].get());
         newOffer[association] = offer.get()[association].get();
       });
 

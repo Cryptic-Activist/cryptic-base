@@ -8,6 +8,10 @@ class Trade extends Model {
           type: DataTypes.BIGINT,
           allowNull: false,
         },
+        trader_id: {
+          type: DataTypes.BIGINT,
+          allowNull: false,
+        },
         offer_id: {
           type: DataTypes.BIGINT,
           allowNull: false,
@@ -55,6 +59,8 @@ class Trade extends Model {
 
   static associate(models) {
     this.belongsTo(models.User, { foreignKey: 'vendor_id', as: 'vendor' });
+    
+    this.belongsTo(models.User, { foreignKey: 'trader_id', as: 'trader' });
 
     this.belongsTo(models.Cryptocurrency, {
       foreignKey: 'cryptocurrency_id',

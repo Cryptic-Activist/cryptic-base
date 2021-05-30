@@ -68,7 +68,9 @@ class User extends Model {
 
     this.hasMany(models.Offer, { foreignKey: 'vendor_id', as: 'offers' });
 
-    this.hasMany(models.Trade, { foreignKey: 'vendor_id', as: 'trades' });
+    this.hasMany(models.Trade, { foreignKey: 'vendor_id', as: 'tradesVendor' });
+
+    this.hasMany(models.Trade, { foreignKey: 'trader_id', as: 'tradesTrader' });
 
     this.hasMany(models.Feedback, {
       foreignKey: 'user_id',

@@ -558,7 +558,7 @@ export interface IOfferReturn {
     updatedAt?: null | Date;
   };
   cryptocurrency?: {
-    id?: string;
+    id?: BigInt;
     name?: string;
     symbol?: string;
     icon?: string;
@@ -872,6 +872,7 @@ export interface IGetPaymentMethodCategory {
 // Trade
 export interface ICreateTrade {
   vendor_id: BigInt;
+  trader_id: BigInt;
   offer_id: BigInt;
   cryptocurrency_id: BigInt;
   chat_id: BigInt;
@@ -894,6 +895,7 @@ export interface ITradeReturn {
 export interface IUpdateTrade {
   id?: BigInt;
   vendor_id?: BigInt;
+  trader_id?: BigInt;
   offer_id?: BigInt;
   cryptocurrency_id?: BigInt;
   chat_id?: BigInt;
@@ -923,6 +925,7 @@ export interface IUpdateTrade {
 export interface IDeleteTrade {
   id?: BigInt;
   vendor_id?: BigInt;
+  trader_id?: BigInt;
   offer_id?: BigInt;
   cryptocurrency_id?: BigInt;
   chat_id?: BigInt;
@@ -952,6 +955,7 @@ export interface IDeleteTrade {
 export interface IGetTrade {
   id?: BigInt;
   vendor_id?: BigInt;
+  trader_id?: BigInt;
   offer_id?: BigInt;
   cryptocurrency_id?: BigInt;
   chat_id?: BigInt;
