@@ -1,6 +1,6 @@
 {
   "name": "cryptic-base",
-  "version": "1.8.7",
+  "version": "1.8.9",
   "description": "Configures, sets up database models and implements CRUD methods for the Cryptic Activist platform.",
   "author": "Davi Silva <davi.cunha.silva.ca@gmail.com>",
   "source": "src/index.ts",
@@ -50,6 +50,7 @@
     "@types/sequelize": "^4.28.9",
     "@typescript-eslint/eslint-plugin": "^4.14.2",
     "@typescript-eslint/parser": "^4.14.2",
+    "babel-eslint": "^10.1.0",
     "babel-plugin-module-resolver": "^4.1.0",
     "commitizen": "^4.2.3",
     "cross-env": "^7.0.3",

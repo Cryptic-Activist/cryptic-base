@@ -78,6 +78,8 @@ export function paymentMethodCategoryValuesAssigner(
 export function tradeValuesAssigner(trade): ITradeReturn {
   return {
     id: trade.get().id,
+    cryptocurrency_amount: trade.get().cryptocurrency_amount,
+    fiat_amount: trade.get().fiat_amount,
     started_at: trade.get().started_at,
     ended_at: trade.get().ended_at,
     state: trade.get().state,

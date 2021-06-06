@@ -28,6 +28,14 @@ class Trade extends Model {
           type: DataTypes.BIGINT,
           allowNull: false,
         },
+        cryptocurrency_amount: {
+          type: DataTypes.FLOAT,
+          allowNull: false,
+        },
+        fiat_amount: {
+          type: DataTypes.FLOAT,
+          allowNull: false,
+        },
         started_at: {
           type: DataTypes.DATE,
           allowNull: false,
@@ -61,7 +69,7 @@ class Trade extends Model {
 
   static associate(models) {
     this.belongsTo(models.User, { foreignKey: 'vendor_id', as: 'vendor' });
-    
+
     this.belongsTo(models.User, { foreignKey: 'trader_id', as: 'trader' });
 
     this.belongsTo(models.Cryptocurrency, {
@@ -75,6 +83,8 @@ class Trade extends Model {
     });
 
     this.belongsTo(models.Chat, { foreignKey: 'chat_id', as: 'chat' });
+
+    this.belongsTo(models.Offer, { foreignKey: 'offer_id', as: 'offer' });
   }
 }
 

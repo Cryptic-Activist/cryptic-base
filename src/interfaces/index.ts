@@ -877,11 +877,15 @@ export interface ICreateTrade {
   cryptocurrency_id: BigInt;
   fiat_id: BigInt;
   chat_id: BigInt;
+  cryptocurrency_amount: number;
+  fiat_amount: number;
   state: 'ongoing' | 'canceled' | 'done' | 'error';
 }
 
 export interface ITradeReturn {
   id: BigInt;
+  cryptocurrency_amount: number;
+  fiat_amount: number;
   started_at: Date;
   ended_at: null | Date;
   state: 'ongoing' | 'canceled' | 'done' | 'error';
@@ -922,6 +926,8 @@ export interface IUpdateTrade {
   cryptocurrency_id?: BigInt;
   fiat_at?: BigInt;
   chat_id?: BigInt;
+  cryptocurrency_amount?: number;
+  fiat_amount?: number;
   started_at?: null | Date;
   ended_at?: Date;
   state?: 'ongoing' | 'canceled' | 'done' | 'error';
@@ -953,6 +959,8 @@ export interface IDeleteTrade {
   cryptocurrency_id?: BigInt;
   fiat_at?: BigInt;
   chat_id?: BigInt;
+  cryptocurrency_amount?: number;
+  fiat_amount?: number;
   started_at?: null | Date;
   ended_at?: Date;
   state?: 'ongoing' | 'canceled' | 'done' | 'error';
@@ -984,6 +992,8 @@ export interface IGetTrade {
   cryptocurrency_id?: BigInt;
   fiat_at?: BigInt;
   chat_id?: BigInt;
+  cryptocurrency_amount?: number;
+  fiat_amount?: number;
   started_at?: null | Date;
   ended_at?: Date;
   state?: 'ongoing' | 'canceled' | 'done' | 'error';

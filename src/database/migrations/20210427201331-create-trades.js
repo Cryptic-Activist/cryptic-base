@@ -1,5 +1,3 @@
-'use strict';
-
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.createTable('trades', {
@@ -56,6 +54,14 @@ module.exports = {
           model: 'chats',
           key: 'id',
         },
+      },
+      cryptocurrency_amount: {
+        type: Sequelize.FLOAT,
+        allowNull: false,
+      },
+      fiat_amount: {
+        type: Sequelize.FLOAT,
+        allowNull: false,
       },
       started_at: {
         type: Sequelize.DATE,

@@ -166,6 +166,7 @@ export default class CrypticBase {
   private updatedTrade: object;
   private deletedTrade: number;
   private trades: ITradeReturn[];
+  private tradeCount: number;
 
   private chat: IChatReturn;
   private updatedChat: object;
@@ -2632,6 +2633,18 @@ export default class CrypticBase {
     return this.trades;
   }
 
+  async countTrades(where?: WhereOptions<IGetTrade>): Promise<number> {
+    try {
+      const count = await Trade.count({ where });
+
+      this.tradeCount = count;
+    } catch (err) {
+      throw Error(err);
+    }
+    return this.tradeCount;
+  }
+
+  // Chat
   async createChat(chatData: ICreateChat): Promise<IChatReturn> {
     try {
       const chat = await Chat.create(chatData);
